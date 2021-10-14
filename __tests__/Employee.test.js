@@ -8,8 +8,20 @@ test("Create's Employee Object", () => {
     expect(employee.email).toEqual(expect.any(String));
 });
 
-// test("Get's employees name", () => {
-//     const employee = new Employee('Timothy', 7891, 'timothy.niemeyer19@gmail.com');
+test("Obtains the employee's name", () => {
+    const employee = new Employee('Timothy', 7891, 'timothy.niemeyer19@gmail.com');
 
-//     expect(employee.getName()).toEqual(expect.any(String));
-// })
+    expect(employee.getName()).toEqual(expect.any(String));
+})
+
+test("Obtains the employee's ID", () => {
+    const employee = new Employee('Timothy', 7891, 'timothy.niemeyer19@gmail.com');
+
+    expect(employee.getId()).toEqual(expect.any(Number));
+})
+
+test("Obtains the employee's Email", () => {
+    const employee = new Employee('Timothy', 7891, 'timothy.niemeyer19@gmail.com');
+
+    expect(employee.getEmail()).toEqual(expect.any(String));
+})
