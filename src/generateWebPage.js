@@ -1,6 +1,70 @@
-const generateWebPage = function(data) {
-    console.log('generateWebPage function from its JS file fired!');
-    console.log('Team Info ', data);
+function createManager(name, id, email, officeNum) {
+    return `
+            <div class="col employee">
+                <div class="name-role">
+                    <h3>${name}</h3>
+                    <h3><i class="fas fa-mug-hot"></i> Manager</h3>
+                </div>
+                <div class="employee-info">
+                    <div class="info-box">
+                        <p>ID: ${id}</p>
+                    </div>
+                    <div class="info-box">
+                        <p>Email: <a href="mailto:${email}">${email}</a></p>
+                    </div>
+                    <div class="info-box">
+                        <p>Office Number: ${officeNum}</p>
+                    </div>
+                </div>
+            </div>
+    `
+}
+
+function createEngineer(name, id, email, ghUsername) {
+    return `
+            <div class="col employee">
+                <div class="name-role">
+                    <h3>${name}</h3>
+                    <h3><i class="fas fa-glasses"></i> Engineer</h3>
+                </div>
+                <div class="employee-info">
+                    <div class="info-box">
+                        <p>ID: ${id}</p>
+                    </div>
+                    <div class="info-box">
+                        <p>Email: <a href="mailto:${email}">${email}</a></p>
+                    </div>
+                    <div class="info-box">
+                        <p>GitHub Username: <a href="https://github.com/${ghUsername}">${ghUsername}</a></p>
+                    </div>
+                </div>
+            </div>
+    `
+}
+
+function createIntern(name, id, email, school) {
+    return `
+            <div class="col employee">
+                <div class="name-role">
+                    <h3>${name}</h3>
+                    <h3><i class="fas fa-user-graduate"></i> Intern</h3>
+                </div>
+                <div class="employee-info">
+                    <div class="info-box">
+                        <p>ID: ${id}</p>
+                    </div>
+                    <div class="info-box">
+                        <p>Email: <a href="mailto:${email}">${email}</a></p>
+                    </div>
+                    <div class="info-box">
+                        <p>School: ${school}</p>
+                    </div>
+                </div>
+            </div>
+    `
+}
+
+function createHTML(employeeSections) {
     return `
 <!DOCTYPE html>
 <html lang="en">
@@ -25,13 +89,49 @@ const generateWebPage = function(data) {
         </div>
     </header>
 
-    <main>
-
+    <main class="container-fluid mt-2">
+        <section class="row row-cols-3 employee-list">
+        ${employeeSections}
+        </section>
     </main>
     
 </body>
 </html>
-    `
+        `
+}
+
+
+const generateWebPage = function(data) {
+    console.log('generateWebPage function from its JS file fired!');
+    console.log('Team Info ', data);
+
+    teamMembersFull = [];
+
+    for (let i = 0; i < data.length; i++) {
+        let employee = data[i];
+        let employeeType = employee.getRole();
+
+        if (employeeType === 'Manager') {
+            let { name, id, email, officeNum } = employee;
+            const managerSection = createManager(name, id, email, officeNum);
+            teamMembersFull.push(managerSection);
+        }
+        if (employeeType === 'Engineer') {
+            let { name, id, email, ghUsername } = employee;
+            const engineerSection = createEngineer(name, id, email, ghUsername);
+            teamMembersFull.push(engineerSection);
+        }
+        if (employeeType === 'Intern') {
+            let { name, id, email, school } = employee;
+            const internSection = createIntern(name, id, email, school);
+            teamMembersFull.push(internSection);
+        }
+    }
+    
+    const teamSections = teamMembersFull.join('');
+
+    return createHTML(teamSections);
+
 }
 
 module.exports = generateWebPage;

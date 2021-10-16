@@ -130,7 +130,7 @@ const employeeQuestions = (value1, value2) => {
         {
             type: 'input',
             name: 'name',
-            message: "What is the thier full name?",
+            message: "What is the their full name?",
             validate: nameInput => {
                 if (nameInput) {
                     return true;
@@ -170,7 +170,7 @@ const employeeQuestions = (value1, value2) => {
     .then(employeeData => {
         if (value1 === 'Manager') {
             let officeNum = value2;
-            let {name, id, email } = employeeData;
+            let {name, id, email, role } = employeeData;
             const manager = new Manager (name, id, email, officeNum);
             teamMembers.push(manager);
         } else if (value1 === 'Engineer') {
@@ -209,7 +209,6 @@ const anotherEmployeeQuestions = () => {
     ])
     .then(employeeAddData => {
         let { addEmployeeResponse } = employeeAddData;
-        console.log("Add the employee ", addEmployeeResponse);
         if (addEmployeeResponse === true) {
             employeeTypeQuestions();
         } else {
@@ -225,8 +224,6 @@ const anotherEmployeeQuestions = () => {
 };
 
 function writeToFile(fullTeam) {
-    // console.log("Write to a file is fired")
-    // console.log("Full Team ", fullTeam)
 
     const content = generateWebPage(fullTeam);
     fs.writeFile('./dist/index.html', content, err => {
