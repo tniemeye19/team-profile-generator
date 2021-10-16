@@ -102,11 +102,10 @@ function createHTML(employeeSections) {
 
 
 const generateWebPage = function(data) {
-    console.log('generateWebPage function from its JS file fired!');
-    console.log('Team Info ', data);
+    // Create array to store what needs to be created in html
+    let teamMembersFull = [];
 
-    teamMembersFull = [];
-
+    // iterate through and create each applicable employee
     for (let i = 0; i < data.length; i++) {
         let employee = data[i];
         let employeeType = employee.getRole();
@@ -115,21 +114,22 @@ const generateWebPage = function(data) {
             let { name, id, email, officeNum } = employee;
             const managerSection = createManager(name, id, email, officeNum);
             teamMembersFull.push(managerSection);
-        }
-        if (employeeType === 'Engineer') {
+        } else if (employeeType === 'Engineer') {
             let { name, id, email, ghUsername } = employee;
             const engineerSection = createEngineer(name, id, email, ghUsername);
             teamMembersFull.push(engineerSection);
-        }
-        if (employeeType === 'Intern') {
+        } else if (employeeType === 'Intern') {
             let { name, id, email, school } = employee;
             const internSection = createIntern(name, id, email, school);
             teamMembersFull.push(internSection);
+        } else {
+            console.log("How did you get here? (generateWebPage Function)");
         }
     }
-    
-    const teamSections = teamMembersFull.join('');
 
+    // Bring all elements togather...
+    const teamSections = teamMembersFull.join('');
+    // ... to sent to the function to create the HTML
     return createHTML(teamSections);
 
 }

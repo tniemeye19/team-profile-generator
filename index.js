@@ -7,6 +7,7 @@ const Intern = require('./lib/Intern');
 const fs = require('fs');
 const inquirer = require('inquirer');
 
+// Empty array to store all team members
 let teamMembers = []
 
 // Questions for Managers
@@ -21,7 +22,7 @@ const managerQuestions = () => {
         {
             type: 'input',
             name: 'officeNumber',
-            message: "What is their assigned office number?",
+            message: "What is the Manager's office number?",
             validate: nameInput => {
                 if (isNaN(nameInput)) {
                     console.log('Please enter an office number!');
@@ -77,7 +78,7 @@ const engineerQuestions = () => {
         {
             type: 'input',
             name: 'ghUsername',
-            message: "What is their GitHub username?",
+            message: "What is the Engineer's GitHub username?",
             validate: nameInput => {
                 if (nameInput) {
                     return true;
@@ -106,7 +107,7 @@ const internQuestions = () => {
         {
             type: 'input',
             name: 'school',
-            message: "What is the name of their school?",
+            message: "What is the name of the Intern's school?",
             validate: nameInput => {
                 if (nameInput) {
                     return true;
@@ -168,9 +169,10 @@ const employeeQuestions = (value1, value2) => {
         }
     ])
     .then(employeeData => {
+        // Creates new Manager, Engineer, Intern based on role
         if (value1 === 'Manager') {
             let officeNum = value2;
-            let {name, id, email, role } = employeeData;
+            let {name, id, email } = employeeData;
             const manager = new Manager (name, id, email, officeNum);
             teamMembers.push(manager);
         } else if (value1 === 'Engineer') {
@@ -190,7 +192,7 @@ const employeeQuestions = (value1, value2) => {
     })
 };
 
-// Check to see if user wants to creat another employee
+// Check to see if user wants to creat another employee, if not returns write to file function
 const anotherEmployeeQuestions = () => {
     inquirer.prompt([
     // Create another employee?
@@ -217,15 +219,14 @@ const anotherEmployeeQuestions = () => {
         You have completed making your team!
         ====================================
             `);
-            // console.log("Team Members --> ", teamMembers);
             return writeToFile(teamMembers);
         }
     })
 };
 
-function writeToFile(fullTeam) {
+function writeToFile(teamMembers) {
 
-    const content = generateWebPage(fullTeam);
+    const content = generateWebPage(teamMembers);
     fs.writeFile('./dist/index.html', content, err => {
         if (err) {
             console.error(err)
@@ -243,6 +244,7 @@ function writeToFile(fullTeam) {
     })
 }
 
+// initiator function
 function init() {
     managerQuestions()
 }
