@@ -1,3 +1,5 @@
+const generateWebPage = require('./src/generateWebPage.js');
+
 const Manager = require('./lib/Manager');
 const Engineer = require('./lib/Engineer');
 const Intern = require('./lib/Intern');
@@ -6,10 +8,6 @@ const fs = require('fs');
 const inquirer = require('inquirer');
 
 let teamMembers = []
-
-const generateWebPage = require('./src/generateWebPage');
-
-let employeeInfo;
 
 // Questions for Managers
 const managerQuestions = () => {
@@ -37,7 +35,6 @@ const managerQuestions = () => {
     .then(managerData => {
         let { officeNumber } = managerData;
         let role = 'Manager';
-        // console.log(officeNumber);
         employeeQuestions(role, officeNumber);
     })
 };
@@ -171,32 +168,21 @@ const employeeQuestions = (value1, value2) => {
         }
     ])
     .then(employeeData => {
-        // console.log("Value 1 ", value1)
-        // console.log("Value 2 ", value2)
         if (value1 === 'Manager') {
             let officeNum = value2;
-            // console.log("Employee Data --> ", employeeData);
             let {name, id, email } = employeeData;
             const manager = new Manager (name, id, email, officeNum);
             teamMembers.push(manager);
-            // console.log("Team Members --> ", teamMembers);
-            // console.log("Manager --> ", manager);
         } else if (value1 === 'Engineer') {
             let ghUsername = value2;
-            // console.log("Employee Data --> ", employeeData);
             let {name, id, email } = employeeData;
             const engineer = new Engineer (name, id, email, ghUsername);
             teamMembers.push(engineer);
-            // console.log("Team Members --> ", teamMembers);
-            // console.log("Engineer --> ", engineer);
         } else if (value1 = 'Intern') {
             let school = value2;
-            // console.log("Employee Data --> ", employeeData);
             let {name, id, email } = employeeData;
             const intern = new Intern (name, id, email, school);
             teamMembers.push(intern);
-            // console.log("Team Members --> ", teamMembers);
-            // console.log("Intern --> ", intern);
         } else {
             console.log("How did you get here? (employeeQuestions constructor function)")
         }
@@ -223,6 +209,7 @@ const anotherEmployeeQuestions = () => {
     ])
     .then(employeeAddData => {
         let { addEmployeeResponse } = employeeAddData;
+        console.log("Add the employee ", addEmployeeResponse);
         if (addEmployeeResponse === true) {
             employeeTypeQuestions();
         } else {
@@ -231,13 +218,36 @@ const anotherEmployeeQuestions = () => {
         You have completed making your team!
         ====================================
             `);
-            console.log("Team Members --> ", teamMembers);
+            // console.log("Team Members --> ", teamMembers);
+            return writeToFile(teamMembers);
         }
     })
 };
 
+function writeToFile(fullTeam) {
+    // console.log("Write to a file is fired")
+    // console.log("Full Team ", fullTeam)
+
+    const content = generateWebPage(fullTeam);
+    fs.writeFile('./dist/index.html', content, err => {
+        if (err) {
+            console.error(err)
+            return
+        };
+        console.log(`
+        =========================
+        WROTE FILE SUCCESSFULLY!
+        -------------------------
+        Check the dist folder for
+        the new index.html page!
+        -------------------------
+        =========================
+        `)
+    })
+}
+
 function init() {
-    managerQuestions();
+    managerQuestions()
 }
 
 init();
