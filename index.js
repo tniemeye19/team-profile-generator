@@ -5,6 +5,8 @@ const Intern = require('./lib/Intern');
 const fs = require('fs');
 const inquirer = require('inquirer');
 
+let teamMembers = []
+
 const generateWebPage = require('./src/generateWebPage');
 
 let employeeInfo;
@@ -15,12 +17,12 @@ const managerQuestions = () => {
         ===============================
         Input Team Manager Information
         ===============================
-    `)
-    return inquirer.prompt([
+    `);
+    inquirer.prompt([
     // Manager Office Number
         {
             type: 'input',
-            name: 'officeNum',
+            name: 'officeNumber',
             message: "What is their assigned office number?",
             validate: nameInput => {
                 if (isNaN(nameInput)) {
@@ -33,15 +35,16 @@ const managerQuestions = () => {
         }
     ])
     .then(managerData => {
-        let { officeNum } = managerData;
-        employeeQuestions();
-        return officeNum;
+        let { officeNumber } = managerData;
+        let role = 'Manager';
+        // console.log(officeNumber);
+        employeeQuestions(role, officeNumber);
     })
 };
 
 // Type of Employee you want to create
 const employeeTypeQuestions = () => {
-    return inquirer.prompt([
+    inquirer.prompt([
     // Employee type
         {
             type: 'list',
@@ -71,12 +74,12 @@ const engineerQuestions = () => {
         ===========================
         Input Engineer Information
         ===========================
-    `)
-    return inquirer.prompt([
+    `);
+    inquirer.prompt([
     // Engineer GitHub Username
         {
             type: 'input',
-            name: 'githubUsername',
+            name: 'ghUsername',
             message: "What is their GitHub username?",
             validate: nameInput => {
                 if (nameInput) {
@@ -88,9 +91,9 @@ const engineerQuestions = () => {
         }
     ])
     .then(engineerData => {
-        let { githubUsername } = engineerData;
-        employeeQuestions();
-        return githubUsername;
+        let { ghUsername } = engineerData;
+        let role = 'Engineer';
+        employeeQuestions(role, ghUsername);
     })
 };
 
@@ -100,12 +103,12 @@ const internQuestions = () => {
         =========================
         Input Intern Information
         =========================
-    `)
-    return inquirer.prompt([
+    `);
+    inquirer.prompt([
     // Intern School Name
         {
             type: 'input',
-            name: 'schoolName',
+            name: 'school',
             message: "What is the name of their school?",
             validate: nameInput => {
                 if (nameInput) {
@@ -117,19 +120,19 @@ const internQuestions = () => {
         }
     ])
     .then(internData => {
-        let { schoolName } = internData;
-        employeeQuestions();
-        return schoolName;
+        let { school } = internData;
+        let role = 'Intern';
+        employeeQuestions(role, school);
     })
 };
 
 // Generic Questions for all types of employees
-const employeeQuestions = (officeNumber) => {
-    return inquirer.prompt([
+const employeeQuestions = (value1, value2) => {
+    inquirer.prompt([
     // Employee Name
         {
             type: 'input',
-            name: 'employeeName',
+            name: 'name',
             message: "What is the thier full name?",
             validate: nameInput => {
                 if (nameInput) {
@@ -142,7 +145,7 @@ const employeeQuestions = (officeNumber) => {
         // Employee ID #
         {
             type: 'input',
-            name: 'employeeIdNumber',
+            name: 'id',
             message: "What is their unique ID number?",
             validate: nameInput => {
                 if (isNaN(nameInput)) {
@@ -156,7 +159,7 @@ const employeeQuestions = (officeNumber) => {
         // Employee Email Address
         {
             type: 'input', 
-            name: 'employeeEmail',
+            name: 'email',
             message: "What is their email address?",
             validate: nameInput => {
                 if (nameInput) {
@@ -168,17 +171,42 @@ const employeeQuestions = (officeNumber) => {
         }
     ])
     .then(employeeData => {
-        let { employeeName, employeeIdNumber, employeeEmail } = employeeData;
-        console.log('Employee Name: ' + employeeName,
-                    '\n' + 'Employee ID Number: ' + employeeIdNumber,
-                    '\n' + 'Employee Email Address: ' + employeeEmail);
+        // console.log("Value 1 ", value1)
+        // console.log("Value 2 ", value2)
+        if (value1 === 'Manager') {
+            let officeNum = value2;
+            // console.log("Employee Data --> ", employeeData);
+            let {name, id, email } = employeeData;
+            const manager = new Manager (name, id, email, officeNum);
+            teamMembers.push(manager);
+            // console.log("Team Members --> ", teamMembers);
+            // console.log("Manager --> ", manager);
+        } else if (value1 === 'Engineer') {
+            let ghUsername = value2;
+            // console.log("Employee Data --> ", employeeData);
+            let {name, id, email } = employeeData;
+            const engineer = new Engineer (name, id, email, ghUsername);
+            teamMembers.push(engineer);
+            // console.log("Team Members --> ", teamMembers);
+            // console.log("Engineer --> ", engineer);
+        } else if (value1 = 'Intern') {
+            let school = value2;
+            // console.log("Employee Data --> ", employeeData);
+            let {name, id, email } = employeeData;
+            const intern = new Intern (name, id, email, school);
+            teamMembers.push(intern);
+            // console.log("Team Members --> ", teamMembers);
+            // console.log("Intern --> ", intern);
+        } else {
+            console.log("How did you get here? (employeeQuestions constructor function)")
+        }
         anotherEmployeeQuestions();
     })
 };
 
 // Check to see if user wants to creat another employee
 const anotherEmployeeQuestions = () => {
-    return inquirer.prompt([
+    inquirer.prompt([
     // Create another employee?
         {
             type: 'confirm',
@@ -202,7 +230,8 @@ const anotherEmployeeQuestions = () => {
         ====================================
         You have completed making your team!
         ====================================
-            `)
+            `);
+            console.log("Team Members --> ", teamMembers);
         }
     })
 };
