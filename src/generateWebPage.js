@@ -1,67 +1,23 @@
-function createManager(name, id, email, officeNum) {
+function createEmployee(name, id, email, value1, value2) {
     return `
-            <div class="col employee">
-                <div class="name-role">
-                    <h3>${name}</h3>
-                    <h3><i class="fas fa-mug-hot"></i> Manager</h3>
-                </div>
-                <div class="employee-info">
-                    <div class="info-box">
-                        <p>ID: ${id}</p>
-                    </div>
-                    <div class="info-box">
-                        <p>Email: <a href="mailto:${email}">${email}</a></p>
-                    </div>
-                    <div class="info-box">
-                        <p>Office Number: ${officeNum}</p>
-                    </div>
-                </div>
+    <div class="col employee">
+        <div class="name-role">
+            <h3>${name}</h3>
+            ${value2}
+        </div>
+        <div class="employee-info">
+            <div class="info-box">
+                <p>ID: ${id}</p>
             </div>
-    `
-}
-
-function createEngineer(name, id, email, ghUsername) {
-    return `
-            <div class="col employee">
-                <div class="name-role">
-                    <h3>${name}</h3>
-                    <h3><i class="fas fa-glasses"></i> Engineer</h3>
-                </div>
-                <div class="employee-info">
-                    <div class="info-box">
-                        <p>ID: ${id}</p>
-                    </div>
-                    <div class="info-box">
-                        <p>Email: <a href="mailto:${email}">${email}</a></p>
-                    </div>
-                    <div class="info-box">
-                        <p>GitHub Username: <a href="https://github.com/${ghUsername}">${ghUsername}</a></p>
-                    </div>
-                </div>
+            <div class="info-box">
+                <p>Email: <a href="mailto:${email}">${email}</a></p>
             </div>
-    `
-}
-
-function createIntern(name, id, email, school) {
-    return `
-            <div class="col employee">
-                <div class="name-role">
-                    <h3>${name}</h3>
-                    <h3><i class="fas fa-user-graduate"></i> Intern</h3>
-                </div>
-                <div class="employee-info">
-                    <div class="info-box">
-                        <p>ID: ${id}</p>
-                    </div>
-                    <div class="info-box">
-                        <p>Email: <a href="mailto:${email}">${email}</a></p>
-                    </div>
-                    <div class="info-box">
-                        <p>School: ${school}</p>
-                    </div>
-                </div>
+            <div class="info-box">
+                ${value1}
             </div>
-    `
+        </div>
+    </div>
+`
 }
 
 function createHTML(employeeSections) {
@@ -117,17 +73,23 @@ const generateWebPage = function(data) {
 
         if (employeeType === 'Manager') {
             let officeNum = employee.getOfficeNum();
-            const managerSection = createManager(name, id, email, officeNum);
+            let symbol = `<h3><i class="fas fa-mug-hot"></i> Manager</h3>`;
+            let officeNumP = `<p>Office Number: ${officeNum}</p>`
+            const managerSection = createEmployee(name, id, email, officeNumP, symbol);
             teamMembersFull.push(managerSection);
 
         } else if (employeeType === 'Engineer') {
             let ghUsername = employee.getGithub();
-            const engineerSection = createEngineer(name, id, email, ghUsername);
+            let symbol = `<h3><i class="fas fa-glasses"></i> Engineer</h3>`;
+            let ghUsernameP = `<p>GitHub Username: <a href="https://github.com/${ghUsername}">${ghUsername}</a></p>`;
+            const engineerSection = createEmployee(name, id, email, ghUsernameP, symbol);
             teamMembersFull.push(engineerSection);
 
         } else if (employeeType === 'Intern') {
             let school = employee.getSchool();
-            const internSection = createIntern(name, id, email, school);
+            let symbol =`<h3><i class="fas fa-user-graduate"></i> Intern</h3>`;
+            let schoolP = `<p>School: ${school}</p>`;
+            const internSection = createEmployee(name, id, email, schoolP, symbol);
             teamMembersFull.push(internSection);
 
         } else {
