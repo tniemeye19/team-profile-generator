@@ -38,7 +38,6 @@ To see an overview of how to run the app and what it produces, please see the sc
 
 In order to install the necessary dependencies for this app, please use the command `npm install`. This app also uses inquirer and jest. If you wish to use these, please ensure that you have the Jest and Inquirer dependencies installed.
 
----
     
 
 ## Usage
